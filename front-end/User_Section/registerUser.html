@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register_User</title>
+    <style>
+        .nav{
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin: auto;
+            padding: 20px;
+
+        }
+        form{
+            width:25%;
+            margin: auto;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 25px;
+            border-radius: 20px;
+        }
+        input{
+            width: 90%;
+            padding: 10px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+        }
+        #submit,select{
+            width: 95%;
+            padding: 10px;
+            border-radius: 7px;
+            margin-bottom: 10px;
+        }
+        #submit:hover{
+            background-color: rgb(64, 64, 64);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="../index.html">Back to Home Page</a>
+        <h3></h3>
+    </div>
+    <div class="container">
+        <form >
+            <h3>Registeration Form</h3>
+            <input id="name" type="text" placeholder="Name" required>
+            <input id="profile_picture" type="text" placeholder="Profile Picture" required>
+            <input id="email" type="text" placeholder="Email" required>
+            <input id="password" type="password" placeholder="Password" required>
+            <select name="profession" id="profession">
+                <option value="">Select Profession</option>
+                <option value="Student">Student</option>
+                <option value="Web Developer">Web Developer</option>
+                <option value="Graphic Designer">Graphic Designer</option>
+            </select>
+            <input id="skills" type="text" placeholder='Add different Skills(separate skills with ",")'required>
+            <input id="hourly_rate" type="text" placeholder="Hourly Rate" required>
+            <input id="submit" value="Register User" type="submit">
+        </form>
+       
+    </div>
+</body>
+</html>
+
+<script>
+    document.querySelector("form").addEventListener("submit",registerBtn);
+
+    function registerBtn(event){
+        event.preventDefault()
+
+        let name=document.querySelector("#name").value;
+        let profile_picture=document.querySelector("#profile_picture").value;
+        let email=document.querySelector("#email").value;
+        let password=document.querySelector("#password").value;
+        let profession=document.querySelector("#profession").value;
+        let skills=document.querySelector("#skills").value;
+        skills=skills.split(",")
+        let hourly_rate=Number(document.querySelector("#hourly_rate").value);
+        let isBooked=false
+        
+        let obj={
+            name,profile_picture,email,password,profession,skills,hourly_rate,isBooked
+        }
+        console.log(obj);
+        registerUser(obj)
+    }
+
+    async function registerUser(obj){
+        try{
+            let res=await fetch("https://wandering-blue-binturong.cyclic.app/freelancers",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify(obj)
+            })
+            console.log(res)
+            alert("Successfully registered")
+        }catch(err){
+            alert("Successfully registered")
+        }
+    }
+
+</script>

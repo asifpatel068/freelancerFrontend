@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <style>
+          a{
+            text-decoration: none;
+        }
+        .nav{
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin: auto;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            margin-bottom: 30px;
+
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="nav">
+        <a href="../index.html">Back to Home Page</a>
+        <a href="./login.html">Login</a>
+        <a href="./freelancers.html">Freelancers</a>
+        <a href="./reports.html">Report</a>
+      
+    </div>
+
+    <div class="container">
+     
+    </div>
+</body>
+</html>
+
+<script>
+   let bag=[];
+
+    async function fetchData(){
+        try{
+            let res=await fetch(`https://wandering-blue-binturong.cyclic.app/freelancers`)
+            let user=await res.json()
+            console.log(user)
+            reportRender(user)
+            bag=user
+        
+        }catch(err){
+            console.log(err)
+            alert("Bad request")
+        }
+    }
+
+ fetchData()
+
+    function reportRender(data){
+        let total=data.length
+        let booked=0;
+        let Available=0;
+        let webdev=0
+        let student=0
+        let gra=0;
+        let avg=0
+        let sum=0
+        for(ele of data){
+            if(ele.isBooked){
+                booked++
+            }else{
+                Available++
+            }
+            if(ele.profession=="Graphic Designer"){
+                gra++
+            }else if(ele.profession=="Web Developer"){
+                webdev++
+            }else if(ele.profession=="Student"){
+                student++
+            }
+                sum+=ele.hourly_rate
+            
+        }
+        avg=sum/total
+        document.querySelector(".container").innerHTML=`
+        <p>- A total number of registered freelancers: ${total}</p>
+        <p>- No. of Booked and Available freelancers: Booked=${booked}, Available=${Available}</p>
+       <p>- Number of freelancers per profession. Student=${student}, Web Developer=${webdev},  Graphic Designer=${gra}</p>
+       <p>- Average hourly rate of the freelancers=${avg}</p>
+        
+        `
+        
+    }
+
+</script>

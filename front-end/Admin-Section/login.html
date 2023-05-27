@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register_User</title>
+    <style>
+          a{
+            text-decoration: none;
+        }
+        .nav{
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin: auto;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            margin-bottom: 30px;
+
+        }
+        form{
+            width:25%;
+            margin: auto;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            padding: 25px;
+            border-radius: 20px;
+        }
+        input{
+            width: 90%;
+            padding: 10px;
+            border-radius: 7px;
+            margin-bottom: 15px;
+        }
+        #submit,select{
+            width: 95%;
+            padding: 10px;
+            border-radius: 7px;
+            margin-bottom: 10px;
+        }
+        #submit:hover{
+            background-color: rgb(64, 64, 64);
+            color: white;
+        }
+      
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="../index.html">Back to Home Page</a>
+        <a href="./login.html">Login</a>
+        <a href="./freelancers.html">Freelancers</a>
+        <a href="./reports.html">Report</a>
+      
+    </div>
+    <div class="container">
+        <form >
+            <h3>Admin Login</h3>
+          
+            <input id="email" type="text" placeholder="Email" required>
+            <input id="password" type="password" placeholder="Password" required>
+     
+            <input id="submit" value="login" type="submit">
+        </form>
+       
+    </div>
+</body>
+</html>
+
+<script>
+    document.querySelector("form").addEventListener("submit",login);
+
+    async function login(event){
+        event.preventDefault()
+
+
+        let email=document.querySelector("#email").value;
+        let password=document.querySelector("#password").value;
+        console.log(email,password)
+        try{
+            let res=await fetch(`https://wandering-blue-binturong.cyclic.app/freelancers?email=${email}&password=${password}`)
+            let user=await res.json()
+            console.log(user)
+            if(user.length>0){
+                alert("Login Successful")
+                window.location="./freelancers.html"
+            }else{
+                alert("Wrong credential")
+            }
+        }catch(err){
+            alert("Bad request")
+        }
+    }
+
+  
+</script>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelancers</title>
+    <style>
+        a{
+            text-decoration: none;
+        }
+        .nav{
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            margin: auto;
+            padding: 20px;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            margin-bottom: 30px;
+
+        }
+        .card-list{
+            width: 80%;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 50px;
+        }
+        .card{
+          
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+           padding: 30px;
+        }
+        .divbody{
+            padding: 30px;
+        }
+        .divbody>h3{
+            text-align: center;
+        }
+        .divbtn{
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .divbtn>button{
+            width: 40%;
+            padding: 20px 50px;
+            margin: 10px;
+        }
+        .divbtn>button:nth-child(1){
+            border: 0px;
+            background-color: rgb(70, 82, 255);
+            color: white;
+            border-radius: 5px;
+        }
+        .divbtn>button:nth-child(2){
+            border: 0px;
+            background-color: rgb(255, 70, 70);
+            color: white;
+            border-radius: 5px;
+        }
+        /* .divbtn>button:nth-child(3){
+            border: 0px;
+            background-color: rgb(33, 129, 28);
+            color: white;
+            border-radius: 5px;
+        } */
+    </style>
+</head>
+<body>
+
+    <div class="nav">
+        <a href="../index.html">Back to Home Page</a>
+        <a href="./login.html">Login</a>
+        <a href="./freelancers.html">Freelancers</a>
+        <a href="./reports.html">Report</a>
+      
+    </div>
+
+    <div class="container">
+        <div class="card-list">
+           
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    let bag=[];
+
+    async function fetchData(){
+        try{
+            let res=await fetch(`https://wandering-blue-binturong.cyclic.app/freelancers`)
+            let user=await res.json()
+            console.log(user)
+            renderData(user)
+            bag=user
+          
+        }catch(err){
+            console.log(err)
+            alert("Bad request")
+        }
+    }
+
+     fetchData()
+
+    function renderData(data){
+        document.querySelector(".card-list").innerHTML=""
+
+        let newarr=data.map((ele)=>{
+            return `
+            <div class="card">
+                <div class="divimg">
+                    <img width="100%" src=${ele.profile_picture} alt="img">
+                </div>
+                <div class="divbody">
+                    <h3>${ele.name}</h3>
+                    <p>Email : ${ele.email}</p>
+                    <p>Profession : ${ele.profession}</p>
+                    <p>Skills : ${ele.skills.join(",")}</p>
+                    <p>Hourly rate : ${ele.hourly_rate}</p>
+                    <p>Booking Status : ${ele.isBooked}</p>
+                </div>
+                <div class="divbtn">
+                    <button id="edit" data-id=${ele.id}>Edit</button>
+                    <button id="del" data-id=${ele.id}>Delete</button>
+                    <button data-id=${ele.id} id="hire"  ${ele.isBooked?"disabled":"class"}>HIRE ME</button>
+                </div>
+            </div>
+            `
+        })
+
+        document.querySelector(".card-list").innerHTML=newarr.join(" ")
+        //delte
+        let delbtns=document.querySelectorAll("#del")
+        for(del of delbtns){
+            del.addEventListener("click",(event)=>{
+                let id=event.target.dataset.id
+                console.log(id)
+                deleteReq(id)
+            })
+        }
+        //edit
+        let editbtns=document.querySelectorAll("#edit")
+        for(del of editbtns){
+            del.addEventListener("click",(event)=>{
+                let id=event.target.dataset.id
+                console.log(id)
+              
+            })
+        }
+        //hire
+        let hire=document.querySelectorAll("#hire")
+        for(del of hire){
+            del.addEventListener("click",(event)=>{
+                let id=event.target.dataset.id
+                console.log(id)
+                updateStatus(id)
+              
+            })
+        }
+    }
+
+    async function deleteReq(id){
+        try{
+            let res=await fetch(`https://wandering-blue-binturong.cyclic.app/freelancers/${id}`,{
+                method:"DELETE",
+                headers:{
+                    "Content-Type":"application/json"
+                } 
+            })
+            fetchData()
+        }catch(err){
+            fetchData()
+        }
+    }
+
+    async function updateStatus(id){
+        try{
+            let res=await fetch(`https://wandering-blue-binturong.cyclic.app/freelancers/${id}`,{
+                method:"PATCH",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({isBooked:true})
+            })
+            fetchData()
+        }catch(err){
+            fetchData()
+        }
+    }
+</script>
